@@ -1,1 +1,3 @@
 *.json
+.claspignore
+node_modules/
