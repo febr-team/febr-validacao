@@ -1,4 +1,6 @@
-# febr-validacao
+<h1 align="center">febr-validacao</h1>
+
+[![clasp](https://img.shields.io/badge/built%20with-clasp-4285f4.svg)](https://github.com/google/clasp)
 
 O objetivo principal do Repositório Brasileiro Livre para Dados Abertos do Solo é projetar, construir e implantar um tipo completamente novo de repositório de dados de solo e mostrar que este repositório maximiza a capacidade de descoberta e reusabilidade de dados do solo. O febr-validacao é um futuro complemento do Google Sheets escrito na plataforma Google Apps Script que permite aos usuários aplicar validação de dados nas planilhas dos conjuntos de dados do febr. A idéia é fornecer uma solução simples onde os próprios usuários possam verificar se os dados adicionados estão corretos ou não, além de gerar automáticamente relatórios com as inconsistências encontradas e como corrigi-las.
 
@@ -22,6 +24,7 @@ Nos testes iniciais, o script detectou todas as inconsistências para as quais f
 Pensando nisso, um complemento para Google Sheets está sendo desenvolvido para resolver esse problema. A ideia é continuar usando os scripts que já foram escritos, mas oferecê-los em larga escala através do complemento, permitindo que os dados sejam validados de forma intuitiva e amigável enquanto são editados.
 
 <!-- ## Build status -->
+
 <!-- ## Deployment -->
 
 <!-- ## Começando
