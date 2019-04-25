@@ -20,7 +20,17 @@ function Column(code, unit) {
 }
 
 /**
- * @description Adiciona uma nova coluna com o código e a unidade de medida especifidados.
+ * @description Imprime no console do Google Apps Script todos os registros de erros.
+ */
+Observacao.prototype.output = function() {
+  this.columns.forEach(function(item, index) {
+    console.log("[" + index + "]");
+    console.log(item);
+  });
+}
+
+/**
+ * @description Adiciona uma nova coluna com o código e a unidade de medida especificados.
  * @param {string} code - O código identificador da coluna
  * @param {string} unit - A unidade de medida da coluna
  * @returns {number} O indíce do valor adicionado ou 0 caso os parâmetros estejam em formatos incorretos
