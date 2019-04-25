@@ -38,17 +38,21 @@ Observacao.prototype.output = function() {
  * @returns {number} O indíce do valor adicionado ou 0 caso os parâmetros estejam em formatos incorretos.
  */
 Observacao.prototype.addColumn = function(code, unit) {
+  var index = 0;
+
   if(typeof(code) === "string" && typeof(unit) == "string") {
+    index = this.columns.length;
+    console.log("Adding column " + code);
     this.columns.push(new Column(code,unit));
-    return this.columns.length - 1;
   }
-  return 0;
+
+  return index;
 }
 
 /**
  * @description Pesquisa uma coluna pelo código identificador.
  * @param {string} code - O código identificador
- * @returns {number} Um número inteiro positivo representado a posição da coluna, ou -1 caso não seja encontrada.
+ * @returns {number} Um inteiro positivo representado o índice da coluna, ou -1 caso não seja encontrada.
  */
 Observacao.prototype.findColumn = function(code) {
   var index = -1;
