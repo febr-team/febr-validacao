@@ -110,3 +110,43 @@ Observacao.prototype.searchValue = function(code, value) {
   
   return 1; // Valor já adicionado
 }
+
+/**
+ * @description Verifica se a unidade de medida está correta para a coluna do código especificado.
+ * @param {string} code - O código identificador da coluna
+ * @param {number} unit - A unidade de medida da coluna
+ * @returns {number} 0 caso a unidade de medida esteja errada, e 1 caso esteja correta.
+ */
+Observacao.prototype.matchUnit = function(code, unit) {
+  var index = 0;
+
+  if(typeof(code) === "string") {
+    if(/^erosao_frequencia_[0-9]+$/.test(code)) {
+      // Código legado
+      index = this.findColumn("erosao_frequencia_i");
+    }
+    else if(/^erosao_forma_[0-9]+$/.test(code)) {
+      // Código legado
+      index = this.findColumn("erosao_forma_i");
+    }
+    else if(/^erosa_profundid_[0-9]+$/.test(code)) {
+      // Código legado
+      index = this.findColumn("erosao_profundid_i");
+    }
+    else {
+      index = this.findColumn(code);
+    }
+  }
+
+  // Previne que sejam acessadas posições inválidas do vetor.
+  if(index >= 0) {
+    if(this.columns[index].unit === unit) {
+      index = 1;
+    }
+    else {
+      index = 0;
+    }
+  }
+
+  return index;
+}
