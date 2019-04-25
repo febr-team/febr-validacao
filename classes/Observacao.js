@@ -65,3 +65,48 @@ Observacao.prototype.findColumn = function(code) {
 
   return index;
 }
+
+/**
+ * @description Adiciona um valor a coluna identificada pelo código.
+ * @param {string} code - O código identificador da coluna
+ * @param {any} value - O valor ser adicionado
+ * @returns {number} O índice da coluna do valor adicionado, ou -1 caso não seja encontrada nenhuma coluna com o código informado.
+ */
+Observacao.prototype.addValue = function(code, value) {
+  var index = this.findColumn(code);
+
+  if(index >= 0) {
+    this.columns[index].rows.push(value);
+  }
+
+  return -1;
+}
+
+/**
+ * @description Verifica se um valor já foi adicionado a coluna.
+ * @param {string} code - O código identificador da coluna
+ * @param {any} value - O valor a ser pesquisado
+ * @return 0 caso o valor não seja encontrado, e 1 caso seja encontrado.
+ */
+Observacao.prototype.searchValue = function(code, value) {
+  var code_index = -1;
+  var row_index = -1;
+
+  if(typeof(code) === "string") {
+    code_index = this.findColumn(code);
+  }
+
+  if(code_index >= 0) {
+    this.columns[code_index].rows.forEach(function(item, item_index) {
+      if(item === value) {
+        row_index = item_index;
+      }
+    });
+  }
+
+  if(row_index < 0) {
+    return 0; // Valor não adicionado
+  }
+  
+  return 1; // Valor já adicionado
+}
