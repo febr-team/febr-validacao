@@ -6,6 +6,7 @@
 function Observacao() {
   // Armazena instâncias da classe Columns
   this.columns = [];
+  
 }
 
 /**
@@ -22,12 +23,12 @@ function Column(code, unit) {
 }
 
 /**
- * @description Imprime no console do Google Apps Script todos os registros de erros.
+ * @description Imprime no Logger do Google Apps Script todos os registros de erros.
  */
 Observacao.prototype.output = function() {
   this.columns.forEach(function(item, index) {
-    console.log("[" + index + "]");
-    console.log(item);
+    Logger.log("[" + index + "]");
+    Logger.log(item);
   });
 }
 
@@ -42,7 +43,7 @@ Observacao.prototype.addColumn = function(code, unit) {
 
   if(typeof(code) === "string" && typeof(unit) == "string") {
     index = this.columns.length;
-    console.log("Adding column " + code);
+    Logger.log("Adding column " + code);
     this.columns.push(new Column(code,unit));
   }
 
@@ -149,4 +150,28 @@ Observacao.prototype.matchUnit = function(code, unit) {
   }
 
   return index;
+}
+
+/**
+ * @description Cria uma instância e preenche com os dados de planilha de padrões do febr.
+ * @param {GoogleAppsScript.Spreadsheet.Sheet} sheet - A planilha que será usada para criar a instância
+ * @returns {Observacao} Um objeto com os dados da planilha.
+ */
+Observacao.createStandard = function(sheet) {
+  var stds = new Observacao();
+  var last_row = sheet.getLastRow();
+  
+  stds.addColumn("observacao_id", "#metadado>");
+  
+  for(var row = 2; row < last_row && sheet.getRange(row,1).getValue() === "observacao"; row++) {
+    var carater = sheet.getRange(row,9).getValue();
+
+    if(carater === "obrigatório" || carater === "recomendado") {
+      var code = sheet.getRange(row,2).getValue().toString();
+      var unit = sheet.getRange(row,5).getValue().toString();
+      stds.addColumn(code, unit);
+    }
+  }
+  
+  return stds;
 }
