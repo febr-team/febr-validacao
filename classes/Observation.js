@@ -3,14 +3,13 @@
  * @constructor
  * @author Mikael Messias <mikaelmessias@alunos.utfpr.edu.br>
  */
-function Observacao() {
+function Observation() {
   // Armazena instâncias da classe Columns
   this.columns = [];
-  
 }
 
 /**
- * Representa os dados da planilha Observação.
+ * Representa o código e os dados de cada coluna da planilha Observação.
  * @constructor
  * @param {string} code - O código identificador da coluna
  * @param {string} unit - A unidade de medida da coluna 
@@ -21,11 +20,12 @@ function Column(code, unit) {
   this.unit = unit;
   this.rows = [];
 }
+ 
 
 /**
  * @description Imprime no Logger do Google Apps Script todos os registros de erros.
  */
-Observacao.prototype.output = function() {
+Observation.prototype.output = function() {
   this.columns.forEach(function(item, index) {
     Logger.log("[" + index + "]");
     Logger.log(item);
@@ -38,7 +38,7 @@ Observacao.prototype.output = function() {
  * @param {string} unit - A unidade de medida da coluna
  * @returns {number} O indíce do valor adicionado ou 0 caso os parâmetros estejam em formatos incorretos.
  */
-Observacao.prototype.addColumn = function(code, unit) {
+Observation.prototype.addColumn = function(code, unit) {
   var index = 0;
 
   if(typeof(code) === "string" && typeof(unit) == "string") {
@@ -55,7 +55,7 @@ Observacao.prototype.addColumn = function(code, unit) {
  * @param {string} code - O código identificador
  * @returns {number} Um inteiro positivo representado o índice da coluna, ou -1 caso não seja encontrada.
  */
-Observacao.prototype.findColumn = function(code) {
+Observation.prototype.findColumn = function(code) {
   var index = -1;
 
   this.columns.forEach(function(item, item_index) {
@@ -73,7 +73,7 @@ Observacao.prototype.findColumn = function(code) {
  * @param {any} value - O valor ser adicionado
  * @returns {number} O índice da coluna do valor adicionado, ou -1 caso não seja encontrada nenhuma coluna com o código informado.
  */
-Observacao.prototype.addValue = function(code, value) {
+Observation.prototype.addValue = function(code, value) {
   var index = this.findColumn(code);
 
   if(index >= 0) {
@@ -89,7 +89,7 @@ Observacao.prototype.addValue = function(code, value) {
  * @param {any} value - O valor a ser pesquisado
  * @return 0 caso o valor não seja encontrado, e 1 caso seja encontrado.
  */
-Observacao.prototype.searchValue = function(code, value) {
+Observation.prototype.searchValue = function(code, value) {
   var code_index = -1;
   var row_index = -1;
 
@@ -118,7 +118,7 @@ Observacao.prototype.searchValue = function(code, value) {
  * @param {number} unit - A unidade de medida da coluna
  * @returns {number} 0 caso a unidade de medida esteja errada, e 1 caso esteja correta.
  */
-Observacao.prototype.matchUnit = function(code, unit) {
+Observation.prototype.matchUnit = function(code, unit) {
   var index = 0;
 
   if(typeof(code) === "string") {
@@ -138,40 +138,15 @@ Observacao.prototype.matchUnit = function(code, unit) {
       index = this.findColumn(code);
     }
   }
-
+  
+  var matched = 0;
+  
   // Previne que sejam acessadas posições inválidas do vetor.
   if(index >= 0) {
-    if(this.columns[index].unit === unit) {
-      index = 1;
-    }
-    else {
-      index = 0;
+    if(this.columns[index].unit === '-' || this.columns[index].unit === unit) {
+      matched = 1;
     }
   }
 
-  return index;
-}
-
-/**
- * @description Cria uma instância e preenche com os dados de planilha de padrões do febr.
- * @param {GoogleAppsScript.Spreadsheet.Sheet} sheet - A planilha que será usada para criar a instância
- * @returns {Observacao} Um objeto com os dados da planilha.
- */
-Observacao.createStandard = function(sheet) {
-  var stds = new Observacao();
-  var last_row = sheet.getLastRow();
-  
-  stds.addColumn("observacao_id", "#metadado>");
-  
-  for(var row = 2; row < last_row && sheet.getRange(row,1).getValue() === "observacao"; row++) {
-    var carater = sheet.getRange(row,9).getValue();
-
-    if(carater === "obrigatório" || carater === "recomendado") {
-      var code = sheet.getRange(row,2).getValue().toString();
-      var unit = sheet.getRange(row,5).getValue().toString();
-      stds.addColumn(code, unit);
-    }
-  }
-  
-  return stds;
+  return matched;
 }
