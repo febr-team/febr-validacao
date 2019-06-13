@@ -1,3 +1,5 @@
+LOG = 0;
+
 /**
  * Representa a planilha Observação.
  * @constructor
@@ -162,16 +164,28 @@ function ObservationSTD(spreadsheet) {
     units: []
   };
   
+  if(LOG) {
+    Logger.log("Obtendo os valores da planilha padrão...");
+  }
+
   // A folha com os códigos
   var sheet = spreadsheet.getSheets()[0];
 
   var max_rows = sheet.getLastRow();
   
+  var value = null;
+
   for(var row = 2; row < max_rows && sheet.getRange(row,1).getValue() === "observacao"; row++) {
     var carater = sheet.getRange(row,9).getValue();
 
     if(carater === "obrigatório" || carater === "recomendado") {
-      columns.codes.push(sheet.getRange(row,2).getValue().toString());
+      value = sheet.getRange(row,2).getValue().toString();
+
+      if(LOG) {
+        Logger.log("Adicionando código " + columns.codes.length + ": " + value);
+      }
+
+      columns.codes.push(value);
     }
   }
 
@@ -180,22 +194,30 @@ function ObservationSTD(spreadsheet) {
 
   max_rows = sheet.getLastRow();
   var max_columns = sheet.getLastColumn();
-  
+
   for(var column = 1; column <= max_columns; column++) {
     if(sheet.getRange(1,column).getValue() === "campo_unidade") {
       break; 
     }
   }
-  
+
   for(var row = 2; row <= max_rows; row++) {
+    value = sheet.getRange(row,column).getValue();
+
+    if(LOG) {
+      Logger.log("Adicionando unidade " + columns.units.length + ": " + value);
+    }
+
     columns.units.push(sheet.getRange(row,column).getValue()); 
   }
-  
+
   this.log = function() {
+    Logger.log("-------- Codes:");
     columns.codes.forEach(function(item, index) {
       Logger.log("[" + index + "]: " + item);
     });
-    
+
+    Logger.log("-------- Units:");
     columns.units.forEach(function(item, index) {
       Logger.log("[" + index + "]: " + item);
     });
