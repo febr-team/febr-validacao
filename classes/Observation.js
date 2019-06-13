@@ -150,3 +150,54 @@ Observation.prototype.matchUnit = function(code, unit) {
 
   return matched;
 }
+
+/**
+ * @description Cria uma instância e preenche com os dados da planilha de padrões do febr.
+ * @param {GoogleAppsScript.Spreadsheet.Spreadsheet} spreadsheet - A planilha que será usada para criar a instância
+ * @returns {Observation} Um objeto com os dados da planilha.
+ */
+function ObservationSTD(spreadsheet) {
+  var columns = {
+    codes: [],
+    units: []
+  };
+  
+  // A folha com os códigos
+  var sheet = spreadsheet.getSheets()[0];
+
+  var max_rows = sheet.getLastRow();
+  
+  for(var row = 2; row < max_rows && sheet.getRange(row,1).getValue() === "observacao"; row++) {
+    var carater = sheet.getRange(row,9).getValue();
+
+    if(carater === "obrigatório" || carater === "recomendado") {
+      columns.codes.push(sheet.getRange(row,2).getValue().toString());
+    }
+  }
+
+  // A folha com as unidades de medida
+  sheet = spreadsheet.getSheets()[1];
+
+  max_rows = sheet.getLastRow();
+  var max_columns = sheet.getLastColumn();
+  
+  for(var column = 1; column <= max_columns; column++) {
+    if(sheet.getRange(1,column).getValue() === "campo_unidade") {
+      break; 
+    }
+  }
+  
+  for(var row = 2; row <= max_rows; row++) {
+    columns.units.push(sheet.getRange(row,column).getValue()); 
+  }
+  
+  this.log = function() {
+    columns.codes.forEach(function(item, index) {
+      Logger.log("[" + index + "]: " + item);
+    });
+    
+    columns.units.forEach(function(item, index) {
+      Logger.log("[" + index + "]: " + item);
+    });
+  }
+}
