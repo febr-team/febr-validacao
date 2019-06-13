@@ -1,3 +1,4 @@
 *.json
 .claspignore
+*.log
 node_modules/
