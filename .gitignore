@@ -1,4 +1,3 @@
 *.json
 .claspignore
 node_modules/
-not/
