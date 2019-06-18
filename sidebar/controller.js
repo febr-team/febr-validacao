@@ -29,5 +29,5 @@ function showSidebar() {
 function showPage(url, name) {
   var ui = SpreadsheetApp.getUi();
 
-  ui.showSidebar(HtmlService.createTemplateFromFile(url).evaluate().setTitle(name);
+  ui.showSidebar(HtmlService.createTemplateFromFile(url).evaluate().setTitle(name));
 }
