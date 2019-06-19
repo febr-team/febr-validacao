@@ -8,21 +8,21 @@ LOG = 0;
 function Observation() {
   // Armazena instâncias da classe Columns
   this.columns = [];
-}
 
-/**
- * Representa o código e os dados de cada coluna da planilha Observação.
- * @constructor
- * @param {string} code - O código identificador da coluna
- * @param {string} unit - A unidade de medida da coluna 
- * @author Mikael Messias <mikaelmessias@alunos.utfpr.edu.br>
- */
-function Column(code, unit) {
-  this.code = code;
-  this.unit = unit;
-  this.rows = [];
+  /**
+  * Representa o código e os dados de cada coluna da planilha Observação.
+  * @constructor
+  * @param {string} code - O código identificador da coluna
+  * @param {string} unit - A unidade de medida da coluna
+  * @author Mikael Messias <mikaelmessias@alunos.utfpr.edu.br>
+  */
+  this.Column = function(code, unit) {
+    this.code = code;
+    this.unit = unit;
+    this.rows = [];
+  }
+
 }
- 
 
 /**
  * @description Imprime no Logger do Google Apps Script todos os registros de erros.
@@ -46,7 +46,7 @@ Observation.prototype.addColumn = function(code, unit) {
   if(typeof(code) === "string" && typeof(unit) == "string") {
     index = this.columns.length;
     Logger.log("Adding column " + code);
-    this.columns.push(new Column(code,unit));
+    this.columns.push(new Observacao.Column(code,unit));
   }
 
   return index;
@@ -110,7 +110,7 @@ Observation.prototype.searchValue = function(code, value) {
   if(row_index < 0) {
     return 0; // Valor não adicionado
   }
-  
+
   return 1; // Valor já adicionado
 }
 
@@ -140,9 +140,9 @@ Observation.prototype.matchUnit = function(code, unit) {
       index = this.findColumn(code);
     }
   }
-  
+
   var matched = 0;
-  
+
   // Previne que sejam acessadas posições inválidas do vetor.
   if(index >= 0) {
     if(this.columns[index].unit === '-' || this.columns[index].unit === unit) {
@@ -154,7 +154,9 @@ Observation.prototype.matchUnit = function(code, unit) {
 }
 
 /**
- * @description Cria uma instância e preenche com os dados da planilha de padrões do febr.
+ * Cria uma instância da classe Observacao e preenche com os dados da planilha de padrões do febr.
+ * @constructor
+ * @author Mikael Messias <mikaelmessias@alunos.utfpr.edu.br>
  * @param {GoogleAppsScript.Spreadsheet.Spreadsheet} spreadsheet - A planilha que será usada para criar a instância
  * @returns {Observation} Um objeto com os dados da planilha.
  */
@@ -163,16 +165,15 @@ function ObservationSTD(spreadsheet) {
     codes: [],
     units: []
   };
-  
-  if(LOG) {
+
+  if(LOG)
     Logger.log("Obtendo os valores da planilha padrão...");
-  }
 
   // A folha com os códigos
   var sheet = spreadsheet.getSheets()[0];
 
   var max_rows = sheet.getLastRow();
-  
+
   var value = null;
 
   for(var row = 2; row < max_rows && sheet.getRange(row,1).getValue() === "observacao"; row++) {
@@ -181,9 +182,7 @@ function ObservationSTD(spreadsheet) {
     if(carater === "obrigatório" || carater === "recomendado") {
       value = sheet.getRange(row,2).getValue().toString();
 
-      if(LOG) {
-        Logger.log("Adicionando código " + columns.codes.length + ": " + value);
-      }
+      if(LOG) Logger.log("Adicionando código " + columns.codes.length + ": " + value);
 
       columns.codes.push(value);
     }
@@ -204,9 +203,7 @@ function ObservationSTD(spreadsheet) {
   for(var row = 2; row <= max_rows; row++) {
     value = sheet.getRange(row,column).getValue();
 
-    if(LOG) {
-      Logger.log("Adicionando unidade " + columns.units.length + ": " + value);
-    }
+    if(LOG) Logger.log("Adicionando unidade " + columns.units.length + ": " + value);
 
     columns.units.push(sheet.getRange(row,column).getValue()); 
   }
@@ -222,4 +219,25 @@ function ObservationSTD(spreadsheet) {
       Logger.log("[" + index + "]: " + item);
     });
   }
+}
+
+/**
+ * @description Função temporária  utilizada para testar as funcionalidades das classes Observation e ObservationSTD.
+ */
+function teste() {
+  var std = SpreadsheetApp.openById("1Dalqi5JbW4fg9oNkXw5TykZTA39pR5GezapVeV0lJZI");
+  var obsstd = new ObservationSTD(std);
+
+//  var obs_sheet = SpreadsheetApp.getActive().getSheets()[0];
+//  var obs_max_rows = obs_sheet.getLastRow();
+
+  var obs_sheet = SpreadsheetApp.openById("1xhrj70CT2gTuohKJJU3smA7Yykba0pdVnEq9uxAvjSM").getSheets()[0];
+  var obs_max_col = obs_sheet.getLastColumn();
+
+  for(var i = 1; i <= obs_max_col; i++) {
+    Logger.log(obs_sheet.getRange(1, i).getValues().toString());
+  }
+
+//  var obs = new Observation();
+
 }
