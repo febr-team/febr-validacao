@@ -1,11 +1,29 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <base target="_top">
-
-    <?!= include('sidebar/css/general.html') ?>
-  </head>
-  <body>
-    <h1>Bem vindo!</h1>
-  </body>
+<head>
+  <meta charset="utf-8">
+  <base target="_top">
+  <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">
+  <link href="https://fonts.googleapis.com/css?family=Hind+Guntur|Lato:400,700|Muli:300,400,600,700&display=swap" rel="stylesheet">
+  
+  <?!= include('sidebar/css/general.html') ?>
+</head>
+<body>
+  <div class="content">
+    <header class="header">
+      <div class="box">
+        <img src="http://coral.ufsm.br/febr/img/logo.png">
+      </div>
+      <div class="box">
+        <h1>Validação de dados</h1>
+      </div>
+    </header>
+    
+    <section class="box">
+      <p>Clique no botão abaixo para identificar a tabela atual.</p>
+      
+      <input type="button" value="Identificar tabela" onclick="identify();" />
+    </div>
+  </div>    
+</body>
 </html>
